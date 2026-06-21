@@ -1,9 +1,10 @@
-// RUNNING BOT: nodemon src/index.js
+// RUNNING BOT: npm run start (for regular use) or npm run dev (with nodemon for auto-restart on changes)
 
 require('dotenv').config();
 const fs = require('fs');
 const path = require('path');
 const {Client, IntentsBitField, Collection} = require('discord.js');
+const dbmanager = require('../database/dbmanager'); // Import the database manager module
 
 // some flag u shouldnt care fr
 const client = new Client({
@@ -42,9 +43,9 @@ function getFilesRecursive(dir) {
 const cmdPath = path.join(__dirname, 'commands'); // Path to the commands directory
 
 if (fs.existsSync(cmdPath)) {
-    const cmdFiles = getFilesRecursive(cmdPath); // Get all command files recursively
+    const cmdFiles = getFilesRecursive(cmdPath); // Get all command files recursively @
 
-    console.log(`--- Loading commands from ${cmdPath} ---`);
+    // console.log(`--- Loading commands from ${cmdPath} ---`);
 
     for (const filePath of cmdFiles) {
         // Delete cache to allow hot-reloading of commands without restarting the bot
@@ -54,14 +55,15 @@ if (fs.existsSync(cmdPath)) {
         
         if ('name' in cmd && 'description' in cmd) {
             client.commands.set(cmd.name, cmd);
-            // Log the loaded command with its relative path for better visibility
-            console.log(`Loaded: ${cmd.name} (${path.relative(cmdPath, filePath)})`);
+            // Log the loaded command (debug) @
+            // console.log(`Loaded: ${cmd.name} (${path.relative(cmdPath, filePath)})`);
         } else {
-            console.warn(`Skipped: ${filePath} (Missing name or description)`);
+            // console.warn(`Skipped: ${filePath} (Missing name or description)`); // debug @
         }
     }
-    // Log total commands loaded
-    console.log(`Total commands loaded: ${client.commands.size}`);
+    // Log total commands loaded (debug) @
+    // console.log(`Total commands loaded: ${client.commands.size}`);
+
 } else { // Handle the case where the commands directory does not exist
     console.error("Error: Commands directory not found!");
 }
@@ -73,6 +75,8 @@ client.on('messageCreate', (message) => {
     // Command handling
     const args = message.content.slice(pfx.length).trim().split(/ +/); // Remove prefix and split the message into arguments
     const commandName = args.shift().toLowerCase();
+
+    // cmd alias
     const command = client.commands.get(commandName);
 
     // Check commands are able to run or not
@@ -86,13 +90,30 @@ client.on('messageCreate', (message) => {
 });
 
 // Client running
-client.on('ready', () => {
-    console.log(`Logged in as ${client.user.tag}!`);
+client.on('clientReady', () => {
+    // console.log(`Logged in as ${client.user.tag}!`); // literally debug too @
 });
 
-// Log in bot token
-client.login(process.env.DISCORD_BOT_API_KEY).then(() => {
-    console.log('Bot token valid');
-}).catch((error) => { // Handle login errors
-    console.error('Error logging in:', error); // Optionally, you can exit the process if login fails
-});
+// Connecting database
+async function connectData() {
+    try {
+        await dbmanager.init();
+        client.db = dbmanager; // Attach the database manager to the client for easy access in commands
+        
+        const rpgmanager = require('../database/rpgmanager');
+        await rpgmanager.init();
+        client.rpg = rpgmanager;
+    } catch (error) {
+        console.error('Error initializing database:', error);
+        process.exit(1);
+    }
+
+    // Login bot
+    client.login(process.env.DISCORD_BOT_API_KEY).then(() => {
+        // console.log('Bot token valid'); // @
+    }).catch((error) => { // Handle login errors
+        console.error('Error logging in:', error); // Optionally, you can exit the process if login fails
+    });
+}
+
+connectData(); // Start the bot by connecting to the database first

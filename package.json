@@ -1,17 +1,21 @@
 {
   "name": "santaa",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "version": "0.1.0",
+  "description": "Literally just a santa",
+  "main": "src/index.js",
   "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js", 
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["discord", "bot", "santa"],
+  "author": "meh2025",
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
     "discord.js": "^14.26.4",
-    "dotenv": "^17.4.2"
+    "dotenv": "^17.4.2",
+    "sqlite": "^5.1.1",
+    "sqlite3": "^6.0.1"
   }
 }

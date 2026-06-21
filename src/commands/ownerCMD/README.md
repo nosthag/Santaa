@@ -1,0 +1,1 @@
+only the owner (meh23_.) allow to use these command, other will be block or impossible to use
