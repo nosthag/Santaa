@@ -5,6 +5,7 @@ const getOptions = () => {
         { label: 'All', value: 'all' },
         { label: 'General', value: 'gnr', emoji: '<:check:1502935345598300301>' },  // change this to your custom emoji
         { label: 'Economic', value: 'eco', emoji: '<:check:1502935333426430074>' },  // change this to your custom emoji
+        { label: 'Utils', value: 'utl', emoji: '<:check:1518787835686031491>' },  // change this to your custom emoji
     ];
     options.push({ label: 'Unknown', value: 'gau3', emoji: '❓' });
     return options;

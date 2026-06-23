@@ -28,7 +28,7 @@ module.exports = {
             .setTitle('**BOT INFORMATION**')
             .addFields(
                 { name: 'Version:', value: `${process.env.BOT_VER} ${process.env.TYPE}`, inline: true },
-                { name: 'Update:', value: '```- Add trade command\n- Fix some stuff at shop command\n- Bug fix```', inline: false }
+                { name: 'Update:', value: '```- Add PVP (with user) and Level stats\n- Improve inventory command\n- Fix bug```', inline: false }
             )
 
         // Menu row — show Owner option only for bot owner
