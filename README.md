@@ -26,8 +26,8 @@ Before you jump in, make sure you have the following ready:
 
 Getting started is easy as hell, run these cmd on ur cmd:
 ```
-git clone https://github.com/meh2025/Santaa-discordBot.git
-cd Santaa-discordBot
+git clone https://github.com/meh2025/Santaa.git
+cd Santaa
 npm install
 ```
 
