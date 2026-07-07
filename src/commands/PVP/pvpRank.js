@@ -5,7 +5,7 @@ const { LeaderboardConfig } = require('../Utils/misc');
 module.exports = {
     name: 'pvprank',
     description: 'View the PVP leaderboard — top fighters by win count (ZpvpRank)',
-    category: 'gnr',
+    category: 'utl',
     async execute(message) {
         try {
             const leaderboard = await rpgmanager.getPvpLeaderboard(10);

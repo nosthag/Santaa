@@ -1,10 +1,6 @@
 const { EmbedBuilder, ActionRowBuilder, StringSelectMenuBuilder, ButtonBuilder, ButtonStyle, ComponentType } = require('discord.js');
 require('dotenv').config();
 const { getMenuRow, getPaginationRow, getOptions } = require('../Utils/NavigateManager');
-// Changelog.json
-const fs = require('fs').promises;
-const path = require('path');
-
 
 module.exports = {
     name: 'help',
@@ -17,25 +13,6 @@ module.exports = {
         const { commands } = message.client;
         const isOwner = message.author.id === process.env.OWNER_ID;
 
-        // Changelog.js (show version bot feature will be remove in future)
-        let updateValue = '```Cannot load changelog list```';
-        try {
-            const changelogPath = path.join(__dirname, '../../../changelog.json');
-            const data = await fs.readFile(changelogPath, 'utf-8');
-            const changelogData = JSON.parse(data);
-
-            if (Array.isArray(changelogData)) {
-                let updateContent = changelogData.map(line => `- ${line}`).join('\n');
-
-                if (updateContent.length > 1000) {
-                    updateContent = updateContent.slice(0, 980) + '\n... and some other updates.';
-                }
-                updateValue = `\`\`\`md\n${updateContent}\n\`\`\``;
-            }
-        } catch (error) {
-            console.error('Error loading CHANGELOG.json:', error);
-        }
-
         // Filter commands based on category and ownership
         const getFilteredCmds = (cat) => {
             return commands.filter(cmd => {
@@ -47,12 +24,9 @@ module.exports = {
 
         // Help embed
         const helpEmbed = new EmbedBuilder()
-            .setTitle('**BOT INFORMATION**')
-            .addFields(
-                { name: 'Version:', value: `${process.env.BOT_VER} ${process.env.TYPE}`, inline: true },
-                { name: 'Update:', value: updateValue, inline: false }
-            )
-            .setFooter({ text: 'New: Zguessmeme, Zolympac, and boss PvP mode' });
+            .setAuthor({ name: 'HELP MENU', iconURL: message.client.user.displayAvatarURL() })
+            .addFields({ name: '', value: 'To get more information about a command, use `Zhelp <command>`', inline: false })
+            .setFooter({ text: `${process.env.BOT_VER} ${process.env.TYPE} | meh23_.`})
 
         // Menu row — show Owner option only for bot owner
         const menuOptions = isOwner

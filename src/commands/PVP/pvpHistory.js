@@ -4,7 +4,7 @@ const rpgmanager = require('../../../database/rpgmanager');
 module.exports = {
     name: 'pvphistory',
     description: 'View recent PVP match history (Zpvphistory [@user])',
-    category: 'gnr',
+    category: 'utl',
     async execute(message) {
         const target = message.mentions.users.first() || message.author;
         const isself = target.id === message.author.id;
