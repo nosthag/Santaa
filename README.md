@@ -46,14 +46,12 @@ copy exampleenv.txt .env
 Open .env and put in your full information.
 Also, create a folder called bosses_memory inside database/ for the PVP AI Bosses. it's mandatory
 
-Finally, We have two way to run this noel ahh bot:
-1. On terminal which is very normal, run these
+Finally, We only have single way to run this bot:
 ```
 npm run dev    # for development
 npm run start  # daily driver mode
 npm run test   # test if it's bugging or not
 ```
-2. Via shell script, just run `bash scripts/santaa.sh`
 
 ---
 thx for read ts, have a gut day bradar
