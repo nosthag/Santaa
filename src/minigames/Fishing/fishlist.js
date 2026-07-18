@@ -25,7 +25,9 @@ module.exports = {
         );
 
         const generateEmbed = (category, page) => {
-            const fishList = fishData[category] || [];
+            const fishList = [...(fishData[category] || [])].sort((a, b) => {
+                return (a.sell - b.sell) || a.name.localeCompare(b.name);
+            });
             const totalPages = Math.ceil(fishList.length / itemsPerPage) || 1;
             const start = page * itemsPerPage;
             const pagedFish = fishList.slice(start, start + itemsPerPage);

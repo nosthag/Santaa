@@ -1,5 +1,6 @@
 const { EmbedBuilder } = require('discord.js');
-const { getJobById, getJobByIdentifier, getAvailableJobs } = require('./jobs/jobData');
+const { getPaginationRow } = require('../Utils/NavigateManager');
+const { jobs, getJobById, getJobByIdentifier, getAvailableJobs, getSortedJobs, getJobCooldownMs, getJobUnlockStatus, formatJobSummary } = require('./jobs/jobData');
 const runJobMinigame = require('./jobs/minigameRunner');
 const buildJobResultEmbed = require('./jobs/buildJobResultEmbed');
 const { JobStart, JobSuccess, JobFail } = require('../Utils/misc');
@@ -47,17 +48,71 @@ module.exports = {
     }
 
     if (action === 'list') {
-      const jobOptions = getAvailableJobs().map(job => `**${job.name}** — ${job.salary}/shift\n${job.description}`).join('\n\n');
-      const embed = new EmbedBuilder()
-        .setTitle('Available careers')
-        .setDescription(jobOptions);
-      return message.channel.send({ embeds: [embed] });
+      const orderedJobs = getSortedJobs();
+      const itemsPerPage = 4;
+      let currentPage = 0;
+
+      const buildJobListEmbed = (page) => {
+        const totalPages = Math.max(1, Math.ceil(orderedJobs.length / itemsPerPage));
+        const start = page * itemsPerPage;
+        const pageJobs = orderedJobs.slice(start, start + itemsPerPage);
+        const jobOptions = pageJobs.map(job => formatJobSummary(job, Number(state.work_count || 0))).join('\n\n');
+
+        return {
+          embed: new EmbedBuilder()
+            .setTitle('Available careers')
+            .setDescription(jobOptions || 'No jobs available at the moment.')
+            .setFooter({ text: `Page ${page + 1} of ${totalPages} • Jobs with ❌ are locked, follow the unlock status to progress.` }),
+          totalPages
+        };
+      };
+
+      const initial = buildJobListEmbed(currentPage);
+      const response = await message.channel.send({
+        embeds: [initial.embed],
+        components: initial.totalPages > 1 ? [getPaginationRow(currentPage, initial.totalPages)] : []
+      });
+
+      const collector = response.createMessageComponentCollector({ time: 60000 });
+
+      collector.on('collect', async (i) => {
+        if (i.user.id !== message.author.id) return i.reply({ content: 'Not your menu!', ephemeral: true });
+        if (!i.isButton()) return;
+
+        switch (i.customId) {
+          case 'prev': currentPage--; break;
+          case 'next': currentPage++; break;
+          case 'first': currentPage = 0; break;
+          case 'last': {
+            const totalPages = Math.max(1, Math.ceil(orderedJobs.length / itemsPerPage));
+            currentPage = Math.max(0, totalPages - 1);
+            break;
+          }
+        }
+
+        const result = buildJobListEmbed(currentPage);
+        await i.update({
+          embeds: [result.embed],
+          components: result.totalPages > 1 ? [getPaginationRow(currentPage, result.totalPages)] : []
+        });
+      });
+
+      collector.on('end', () => {
+        response.edit({ components: [] }).catch(() => {});
+      });
+
+      return;
     }
 
     if (action === 'choose') {
       const targetJob = getJobByIdentifier(args[1]);
       if (!targetJob) {
         return message.reply('That job was not found. Use `Zjob list` to see the available careers.');
+      }
+
+      const unlockStatus = getJobUnlockStatus(targetJob, Number(state.work_count || 0));
+      if (!unlockStatus.unlocked) {
+        return message.reply(`You cannot choose **${targetJob.name}** yet. ${unlockStatus.reason}`);
       }
 
       await dbManager.updateJobProgress(author.id, {
@@ -89,7 +144,8 @@ module.exports = {
     }
 
     const lastWorkedAt = Number(state.last_worked_at || 0);
-    if (lastWorkedAt && now - lastWorkedAt > cooldownConfig.jobWorkCooldown) {
+    const jobCooldownMs = getJobCooldownMs(job);
+    if (jobCooldownMs > 0 && lastWorkedAt && now - lastWorkedAt > jobCooldownMs) {
       await dbManager.updateJobProgress(author.id, {
         fired_at: now,
         fired_until: now + cooldownConfig.jobFirePenalty,

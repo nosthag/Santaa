@@ -95,15 +95,27 @@ module.exports = {
                     { label: 'Go Back', value: 'back', description: 'Return to main menu' }
                 ];
 
+                const shopItemEntries = [];
                 for (const file of itemFiles) {
                     const item = require(`./shopUtils/${shopType}/${file}`);
                     shopItems.set(item.id, item);
-                    shopOptions.push({
+                    shopItemEntries.push(item);
+                }
+
+                const sortedShopItems = shopItemEntries
+                    .sort((a, b) => {
+                        const priceA = Number(a.cost) || 0;
+                        const priceB = Number(b.cost) || 0;
+                        if (priceA !== priceB) return priceA - priceB;
+                        return String(a.name).localeCompare(String(b.name));
+                    })
+                    .map(item => ({
                         label: item.name,
                         value: item.id,
                         description: `Cost: ${item.cost} ${currencyName}`
-                    });
-                }
+                    }));
+
+                shopOptions.push(...sortedShopItems);
 
                 const shopEmbed = new EmbedBuilder()
                     .setTitle(shopTitle)

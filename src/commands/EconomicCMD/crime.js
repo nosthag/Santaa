@@ -5,7 +5,7 @@ const { CURRENCY_EMOJI } = require('../Utils/config');
 
 module.exports = {
     name: 'crime',
-    description: 'What is faster than work hard? Commit a crime!',
+    description: 'What is faster than work hard? Commit a crime somewhere in nevada and get rich quick! (or not)',
     category: 'eco',
     async execute(message) {
         const { client, author } = message;

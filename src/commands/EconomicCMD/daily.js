@@ -4,7 +4,7 @@ const { CURRENCY_EMOJI } = require('../Utils/config');
 
 module.exports = {
     name: 'daily',
-    description: 'Claim your daily reward (24 hour cooldown)',
+    description: 'Claim your daily reward',
     category: 'eco',
     async execute(message) {
         // Database manager

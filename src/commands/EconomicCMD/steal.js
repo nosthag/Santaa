@@ -7,7 +7,7 @@ const MIN_TARGET_BALANCE = 50; // target must have at least this much to be stea
 
 module.exports = {
     name: 'steal',
-    description: 'Attempt to steal money from another user\'s wallet (Zsteal @user)',
+    description: 'You so broke that begging aint work so you try attempt to steal money from another user\'s wallet (Zsteal @user)',
     category: 'eco',
     async execute(message) {
         const { author } = message;

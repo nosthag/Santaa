@@ -37,7 +37,9 @@ module.exports = {
         };
 
         const generateEmbed = (category, page) => {
-            const list = mineralData[category] || [];
+            const list = [...(mineralData[category] || [])].sort((a, b) => {
+                return (a.sell - b.sell) || a.name.localeCompare(b.name);
+            });
             const totalPages = Math.ceil(list.length / itemsPerPage) || 1;
             const start = page * itemsPerPage;
             const paged = list.slice(start, start + itemsPerPage);

@@ -5,7 +5,7 @@ const { CURRENCY_EMOJI } = require('../Utils/config');
 
 module.exports = {
     name: 'parttime',
-    description: 'Do part-time work cuz u unemployed final boss (4 minute cooldown)',
+    description: 'Do part-time work cuz u unemployed final boss',
     category: 'eco',
     async execute(message) {
         const { client, author } = message;
