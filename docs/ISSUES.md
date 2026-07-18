@@ -17,7 +17,7 @@
 
 ### [ISSUES-003]: fish.js in wrong locate
  - **Status**: Fixed
- - **Detail**: Before change, `fish.js` currently runs fine in `src/commands/EconomicCMD/`. `src/index.js` loads both `commands` and `minigames`, so leaving it in `EconomicCMD` avoids breaking behavior.
+ - **Detail**: Before moving, `fish.js` currently runs fine in `src/commands/EconomicCMD/`. `src/index.js` loads both `commands` and `minigames`, so leaving it in `EconomicCMD` avoids breaking behavior.
 
 ### [ISSUES-004]: Cannot equip than one item
  - **Status**: Fixed
