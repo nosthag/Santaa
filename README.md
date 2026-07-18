@@ -3,30 +3,29 @@
 </p>
 
 <p align="center">
-  <strong>A lightweight, lightning-fast Discord bot built for easy customization with Javascript</strong>
+  <strong>A lightweight, lightning-fast Discord bot built for easy customization using 100% Javascript</strong>
 </p>
 
 <p align="center">
-  <i>(All you have to do is download, slap in your discord token, and your fckin discord id)</i>
+  <a href="#PREREQUISITES">PREREQUISITES</a> ·
+  <a href="#SETUP">SETUP</a> ·
+  <a href="docs/CHANGELOG.md">CHANGELOG</a> ·
+  <a href="docs/ISSUES.md">KNOWN ISSUES</a>
 </p>
-
 ---
 
-## 🛠️ Prerequisites
+## PREREQUISITES
 
-Before you go full noob mode:
+Before do anything:
 
-1. **Node.js** (v16 or higher, or your PC will throw a tantrum)
-2. **Discord Bot Token** (go to at the Discord Developer Portal)
+1. **Node.js** (recommend v16 or higher)
+2. **Discord Bot Token**
 3. **Your Discord User ID** (for owner commands, so you can flex on everyone)
-4. Meh studio (jk that dont exist)
-
-*We gonna install dependencies later yall, hold your horses fr*
 
 > **Note on Databases:**  
-> I used SQLite cuz Im lazy af and MongoDB setup sounded like a side quest. You can swap to Mongo if you're built different, just edit the files
+> I used SQLite cuz Im lazy and MongoDB setup sounded like a side quest. You can swap to Mongo if you're built different
 
-## 🚀 How to Use
+## SETUP
 
 Run these commands in your terminal:
 
@@ -44,7 +43,7 @@ cp exampleenv.txt .env
 copy exampleenv.txt .env
 ```
 Open .env and put in your full information.
-Also, create a folder called bosses_memory inside database/ for the PVP AI Bosses. it's mandatory
+Also, create a folder called bosses_memory inside database/ for the PVP AI Bosses. it's mandatory (Gonna fix it in v1.1.1 STABLE)
 
 Finally, We only have single way to run this bot:
 ```
