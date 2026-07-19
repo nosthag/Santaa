@@ -97,7 +97,7 @@ module.exports = {
     name: 'Stone',
     sell: 10,
     desc: 'Item description',
-    type: 'consumable', 'sellable'
+    type: ['consumable', 'sellable']
 };
 
 // By default, if the item belongs to only one type or than other types (such as equippable, consumable...) that are not related to:
