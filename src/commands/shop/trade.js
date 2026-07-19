@@ -126,6 +126,8 @@ module.exports = {
     name: 'trade',
     description: 'Trade items and money with another user',
     category: 'eco',
+    usage: 'Ztrade <@user>',
+    notes: 'Can only trade sellable / untradeable-sellable / unsellable items.',
 
     async execute(message, args) {
         const allItems = loadItems();

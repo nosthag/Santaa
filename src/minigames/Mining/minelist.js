@@ -6,6 +6,7 @@ module.exports = {
     name: 'minelist',
     description: 'Display all mineable minerals categorized by rarity',
     category: 'mie',
+    usage: 'Zminelist',
     async execute(message, args) {
         let currentPage = 0;
         const itemsPerPage = 5;

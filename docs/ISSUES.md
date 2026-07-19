@@ -55,10 +55,17 @@
 - **Status**: Fixed
 - **Detail**: the canvas not supporting emoji lol
 
+### [ISSUE-013]: Wanted level increased too drastically even few commands
+- **Status**: Fixed
+- **Detail**: The wanted level has been increased too drastically, even though only a few crime/steal warrants
+
+### [ISSUE-014]: Wanted level decay too short
+- **Status**: Fixed
+- **Detail**: The wanted level decay too short (I set it on config.js only have 10 seconds for decay)
+
 ---
 ## STILL NOT FIX OR OTHER ISSUE
-### [ISSUE-013]: Not found
+### [ISSUE-015]: Currently Not found
 ---
 # BUG
-
 ### [BUG-000]: Non-bug currently found

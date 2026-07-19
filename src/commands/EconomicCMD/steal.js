@@ -2,6 +2,7 @@ const { EmbedBuilder } = require('discord.js');
 const { checkCooldown } = require('../Utils/Cooldown');
 const { StealSuccess, StealFail, StealBusted } = require('../Utils/misc');
 const { CURRENCY_EMOJI } = require('../Utils/config');
+const { checkWantedRestrictions } = require('../Utils/WantedLevel');
 
 const MIN_TARGET_BALANCE = 50; // target must have at least this much to be steal-able
 
@@ -9,6 +10,7 @@ module.exports = {
     name: 'steal',
     description: 'You so broke that begging aint work so you try attempt to steal money from another user\'s wallet (Zsteal @user)',
     category: 'eco',
+    usage: 'Zsteal @user',
     async execute(message) {
         const { author } = message;
         const dbManager = message.client.db;
@@ -32,6 +34,14 @@ module.exports = {
             return message.reply(`Please wait **${timeLeft}** before attempting to steal again.`);
         }
 
+        const wantedCheck = await checkWantedRestrictions(author.id, this.name, message.client, message);
+        if (!wantedCheck.allowed) {
+            if (!wantedCheck.handled && wantedCheck.message) {
+                message.reply(wantedCheck.message);
+            }
+            return;
+        }
+
         try {
             // ── Check target balance ──────────────────────────────────────
             const targetData = await dbManager.getUser(targetUser.id);
@@ -42,11 +52,21 @@ module.exports = {
             }
 
             // ── Outcome roll ──────────────────────────────────────────────
+            const authorStats = await rpgManager.getStats(author.id);
+            const wl = Math.floor((authorStats.wanted_level || 0) / 5);
+            
             const roll = Math.floor(Math.random() * 100) + 1;
-            // 30% success, 40% fail, 30% busted
+            let successChance = 30;
+            if (wl === 2) successChance = 25;
+            else if (wl === 3) successChance = 20;
+            else if (wl >= 4 && wl < 6) successChance = 10;
+            else if (wl >= 6) successChance = 1;
+
+            let failChance = 40;
+            // 30% success, 40% fail, 30% busted normally
             let outcome;
-            if (roll <= 30) outcome = 'success';
-            else if (roll <= 70) outcome = 'fail';
+            if (roll <= successChance) outcome = 'success';
+            else if (roll <= successChance + failChance) outcome = 'fail';
             else outcome = 'busted';
 
             const getRandom = (arr) => arr[Math.floor(Math.random() * arr.length)];
@@ -80,26 +100,38 @@ module.exports = {
                     );
 
             } else {
-                // Busted — lose 10–20% of own wallet + 15 stamina
+                // Busted — lose 10–20% of own wallet + 15 stamina (or 80% stats if WL >= 3)
                 const selfData = await dbManager.getUser(author.id);
                 const pct = (Math.floor(Math.random() * 11) + 10) / 100; // 0.10 – 0.20
                 const fine = Math.min(selfData.balance, Math.max(1, Math.floor(selfData.balance * pct)));
 
                 if (fine > 0) await dbManager.removeMoney(author.id, fine);
 
-                // Stamina penalty
+                // Penalty
                 const stats = await rpgManager.getStats(author.id);
-                const newStamina = Math.max(0, stats.stamina - 15);
-                await rpgManager.updateStats(author.id, stats.health, newStamina);
+                let newHealth = stats.health;
+                let newStamina = Math.max(0, stats.stamina - 15);
+                let penaltyText = `lost **15 Stamina**`;
+
+                if (wl >= 3) {
+                    newHealth = Math.floor(stats.health * 0.2); // 80% loss means remaining is 20%
+                    newStamina = Math.floor(stats.stamina * 0.2);
+                    penaltyText = `lost **80% of your HP and Stamina**`;
+                }
+
+                await rpgManager.updateStats(author.id, newHealth, newStamina);
 
                 embed
                     .setTitle('Caught Red-Handed!')
                     .setDescription(
                         `${getRandom(StealBusted)}\n\n` +
-                        `You were punished **${fine.toLocaleString()}** and lost **15 Stamina**.`
+                        `You were punished **${fine.toLocaleString()}** and ${penaltyText}.`
                     )
                     .setColor('#DC2626');
             }
+
+            // Increase Wanted Level
+            await rpgManager.updateWantedLevel(author.id, 1);
 
             message.channel.send({ embeds: [embed] });
 

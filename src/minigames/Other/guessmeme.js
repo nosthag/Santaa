@@ -13,6 +13,7 @@ module.exports = {
   name: 'guess',
   description: 'Become a nerd lord and guess the memes',
   category: 'mie',
+  usage: 'Zguess',
 
   async execute(message) {
     try {

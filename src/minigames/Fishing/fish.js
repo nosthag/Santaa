@@ -4,6 +4,7 @@ const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('
 const { getRandomFish, calculateExp } = require('./fishCore');
 const rpgmanager = require('../../../database/rpgmanager');
 const { checkCooldown, getCooldownDuration } = require('../../commands/Utils/Cooldown');
+const { checkWantedRestrictions } = require('../../commands/Utils/WantedLevel');
 
 const fishCounts = new Map(); // userId -> { count, cooldownUntil }
 
@@ -75,6 +76,7 @@ module.exports = {
     name: 'fish',
     description: 'Start fishing for rare fish!',
     category: 'mie',
+    usage: 'Zfish',
     resetFishLimit,
     checkFishLimit,
     async execute(message, args) {
@@ -83,6 +85,12 @@ module.exports = {
         const limitStatus = checkFishLimit(userId);
         if (!limitStatus.allowed) {
             return message.reply(limitStatus.message);
+        }
+
+        const wantedCheck = await checkWantedRestrictions(userId, this.name, message.client, message);
+        if (!wantedCheck.allowed) {
+            if (!wantedCheck.handled && wantedCheck.message) message.reply(wantedCheck.message);
+            return;
         }
 
         let gameState = 'IDLE'; // IDLE, WAITING, BITING

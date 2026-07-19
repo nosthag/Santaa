@@ -4,6 +4,7 @@ const { jobs, getJobById, getJobByIdentifier, getAvailableJobs, getSortedJobs, g
 const runJobMinigame = require('./jobs/minigameRunner');
 const buildJobResultEmbed = require('./jobs/buildJobResultEmbed');
 const { JobStart, JobSuccess, JobFail } = require('../Utils/misc');
+const { checkWantedRestrictions } = require('../Utils/WantedLevel');
 
 const cooldownConfig = require('../Utils/config');
 const TEST_MONTH_WORK_REQUIREMENT = 10;
@@ -25,6 +26,7 @@ module.exports = {
   name: 'job',
   description: 'The most feared word in the world... THE JOB!!!! (use `Zjob help` for more info)',
   category: 'eco',
+  usage: 'Zjob <help/work/list/choose>',
   async execute(message, args = []) {
     const { author } = message;
     const dbManager = message.client.db;
@@ -98,13 +100,19 @@ module.exports = {
       });
 
       collector.on('end', () => {
-        response.edit({ components: [] }).catch(() => {});
+        response.edit({ components: [] }).catch(() => { });
       });
 
       return;
     }
 
     if (action === 'choose') {
+      const wantedCheck = await checkWantedRestrictions(author.id, this.name, message.client, message);
+      if (!wantedCheck.allowed) {
+        if (!wantedCheck.handled && wantedCheck.message) message.reply(wantedCheck.message);
+        return;
+      }
+
       const targetJob = getJobByIdentifier(args[1]);
       if (!targetJob) {
         return message.reply('That job was not found. Use `Zjob list` to see the available careers.');
@@ -136,6 +144,12 @@ module.exports = {
     if (state.fired_until > now) {
       const waitTime = state.fired_until - now;
       return message.reply(`You were fired and cannot work again for ${formatTimeLeft(waitTime)}.`);
+    }
+
+    const wantedCheck = await checkWantedRestrictions(author.id, this.name, message.client, message);
+    if (!wantedCheck.allowed) {
+      if (!wantedCheck.handled && wantedCheck.message) message.reply(wantedCheck.message);
+      return;
     }
 
     const job = getJobById(state.job_id);

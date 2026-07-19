@@ -62,6 +62,7 @@ module.exports = {
   name: 'leaderboard',
   description: 'Show a leaderboard for money, level, wins, and steals.',
   category: 'utl',
+    usage: 'Zleaderboard',
   async execute(message, args = []) {
     const requestedCategory = (args[0] || LeaderboardConfig.DefaultCategory || 'money').toLowerCase();
     const initialCategory = categories.find((item) => item.key === requestedCategory) ? requestedCategory : 'money';

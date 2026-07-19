@@ -1,5 +1,6 @@
 const sqlite3 = require('sqlite3');
 const { open } = require('sqlite');
+const config = require('../src/commands/Utils/config');
 
 let db;
 
@@ -30,7 +31,9 @@ module.exports = {
                 exp INTEGER DEFAULT 0,
                 steals INTEGER DEFAULT 0,
                 equipped_item_id TEXT DEFAULT NULL,
-                equipped_items TEXT DEFAULT '[]'
+                equipped_items TEXT DEFAULT '[]',
+                wanted_level INTEGER DEFAULT 0,
+                wanted_updated_at INTEGER DEFAULT 0
             )
         `);
 
@@ -51,6 +54,8 @@ module.exports = {
         try { await db.exec(`ALTER TABLE stats ADD COLUMN exp INTEGER DEFAULT 0;`); } catch (e) {}
         try { await db.exec(`ALTER TABLE stats ADD COLUMN steals INTEGER DEFAULT 0;`); } catch (e) {}
         try { await db.exec(`ALTER TABLE stats ADD COLUMN equipped_items TEXT DEFAULT '[]';`); } catch (e) {}
+        try { await db.exec(`ALTER TABLE stats ADD COLUMN wanted_level INTEGER DEFAULT 0;`); } catch (e) {}
+        try { await db.exec(`ALTER TABLE stats ADD COLUMN wanted_updated_at INTEGER DEFAULT 0;`); } catch (e) {}
     },
 
     // Add item to inventory
@@ -72,10 +77,31 @@ module.exports = {
     async getStats(userId) {
         let stats = await db.get('SELECT * FROM stats WHERE user_id = ?', [userId]);
         if (!stats) {
-            await db.run('INSERT OR IGNORE INTO stats (user_id, health, stamina, attack, defense, level, exp, steals, equipped_item_id) VALUES (?, 100, 100, 5, 2, 1, 0, 0, NULL)', [userId]);
-            stats = { user_id: userId, health: 100, stamina: 100, attack: 5, defense: 2, level: 1, exp: 0, steals: 0, equipped_item_id: null };
+            await db.run('INSERT OR IGNORE INTO stats (user_id, health, stamina, attack, defense, level, exp, steals, equipped_item_id, wanted_level, wanted_updated_at) VALUES (?, 100, 100, 5, 2, 1, 0, 0, NULL, 0, 0)', [userId]);
+            stats = { user_id: userId, health: 100, stamina: 100, attack: 5, defense: 2, level: 1, exp: 0, steals: 0, equipped_item_id: null, wanted_level: 0, wanted_updated_at: 0, equipped_items: '[]' };
+        } else {
+            // Decay wanted level
+            const now = Date.now();
+            if (stats.wanted_level > 0 && stats.wanted_updated_at > 0) {
+                const decayTime = config.wantedDecay || 24 * 60 * 60 * 1000;
+                if (now - stats.wanted_updated_at > decayTime) {
+                    const newWantedLevel = Math.max(0, stats.wanted_level - 10);
+                    await db.run('UPDATE stats SET wanted_level = ?, wanted_updated_at = ? WHERE user_id = ?', [newWantedLevel, now, userId]);
+                    stats.wanted_level = newWantedLevel;
+                    stats.wanted_updated_at = now;
+                }
+            }
         }
         return stats;
+    },
+
+    // Update wanted level
+    async updateWantedLevel(userId, change) {
+        let stats = await this.getStats(userId);
+        let newLevel = Math.max(0, Math.min(30, (stats.wanted_level || 0) + change));
+        const now = Date.now();
+        await db.run('UPDATE stats SET wanted_level = ?, wanted_updated_at = ? WHERE user_id = ?', [newLevel, now, userId]);
+        return newLevel;
     },
 
     // Update general stats

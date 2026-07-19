@@ -4,8 +4,9 @@ const { LeaderboardConfig } = require('../Utils/misc');
 
 module.exports = {
     name: 'pvprank',
-    description: 'View the PVP leaderboard — top fighters by win count (ZpvpRank)',
+    description: 'View the PVP leaderboard — top fighters by win count',
     category: 'utl',
+    usage: 'Zpvprank',
     async execute(message) {
         try {
             const leaderboard = await rpgmanager.getPvpLeaderboard(10);
@@ -17,17 +18,17 @@ module.exports = {
             const { Emoji } = LeaderboardConfig;
 
             const rows = await Promise.all(leaderboard.map(async (entry, i) => {
-                const rank  = i + 1;
+                const rank = i + 1;
                 const emoji = Emoji[String(rank)] ?? '▫️';
                 const total = entry.wins + entry.losses;
-                const rate  = total > 0 ? Math.round((entry.wins / total) * 100) : 0;
+                const rate = total > 0 ? Math.round((entry.wins / total) * 100) : 0;
 
                 // Try to fetch username from Discord cache
                 let username = `<@${entry.winner_id}>`;
                 try {
                     const member = await message.guild.members.fetch(entry.winner_id).catch(() => null);
                     if (member) username = member.displayName;
-                } catch (_) {}
+                } catch (_) { }
 
                 return (
                     `${emoji} **#${rank}** — ${username}\n` +

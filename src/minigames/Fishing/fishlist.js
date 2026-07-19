@@ -6,6 +6,7 @@ module.exports = {
     name: 'fishlist',
     description: 'Display all catchable fish categorized by rarity',
     category: 'mie',
+    usage: 'Zfishlist',
     async execute(message, args) {
         let currentPage = 0;
         const itemsPerPage = 5;

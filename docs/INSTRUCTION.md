@@ -74,6 +74,8 @@ module.exports = {
   name: 'hello',
   description: 'Bot greeting command',
   category: 'gnr', // eco: Economic, gnr: General, owner: Owner, utl: Utils, mie: Minigames
+  usage: '(YOUR_PREFIX)hello [USER] (OPTIONAL)', // really need
+  notes: 'You can tag a user to greet them, or leave it blank to greet yourself.', // not necessary to add
   execute(message, args) {
     message.reply('Hello!');
   },
@@ -96,7 +98,7 @@ module.exports = {
     id: 'stone',
     name: 'Stone',
     sell: 10,
-    desc: 'Item description',
+    desc: 'You could find this somewhere at your garden',
     type: ['consumable', 'sellable']
 };
 

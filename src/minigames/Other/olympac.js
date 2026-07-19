@@ -47,6 +47,7 @@ module.exports = {
   name: 'olympac',
   description: 'Olympac is the sprint minigame where you tap as fast as possible to win',
   category: 'mie',
+  usage: 'Zolympac',
   olympacPrompts,
   defaultConfig,
 

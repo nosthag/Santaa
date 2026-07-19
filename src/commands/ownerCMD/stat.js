@@ -6,6 +6,7 @@ module.exports = {
     name: 'stat',
     description: 'Show bot statistics (Owner only)',
     category: 'owner',
+    usage: 'Zstat',
     async execute(message) {
         if (message.author.id !== process.env.OWNER_ID) return;
 

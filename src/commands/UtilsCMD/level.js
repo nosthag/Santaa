@@ -6,6 +6,7 @@ module.exports = {
   name: 'level',
   description: 'Check your or another user\'s level',
   category: 'utl',
+  usage: 'Zlevel <@user>',
   async execute(message, args) {
     const targetUser = message.mentions.users.first() || message.author;
     const stats = await getTotalStats(targetUser.id);

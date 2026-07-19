@@ -4,6 +4,7 @@ const { checkCooldown } = require('../../commands/Utils/Cooldown');
 const mineCore = require('./mineCore');
 const mineBoard = require('./mineBoard');
 const mineUI = require('./mineUI');
+const { checkWantedRestrictions } = require('../../commands/Utils/WantedLevel');
 
 const mineCounts = new Map();
 
@@ -11,6 +12,7 @@ module.exports = {
 	name: 'mine',
 	description: 'Finding gems on the underground with a lot of bombs',
 	category: 'mie',
+	usage: 'Zmine',
 	async execute(message, args) {
 		const userId = message.author.id;
 
@@ -24,6 +26,12 @@ module.exports = {
 			const cooldownTime = checkCooldown(userId, 'mine_exhaustion');
 			if (cooldownTime) return message.reply(`You're exhausted! Wait **${cooldownTime}** before mining again.`);
 			else mineCounts.set(userId, 0);
+		}
+
+		const wantedCheck = await checkWantedRestrictions(userId, this.name, message.client, message);
+		if (!wantedCheck.allowed) {
+			if (!wantedCheck.handled && wantedCheck.message) message.reply(wantedCheck.message);
+			return;
 		}
 
 		const stats = await rpgmanager.getStats(userId);
@@ -159,7 +167,7 @@ module.exports = {
 
 					const winEmbed = new EmbedBuilder()
 						.setTitle('Perfect Mine!')
-						.setDescription(`You cleared the mine and kept ${session.sessionLoot.length} minerals. +25% EXP`) 
+						.setDescription(`You cleared the mine and kept ${session.sessionLoot.length} minerals. +25% EXP`)
 						.setColor('#16A34A');
 
 					await i.update({ embeds: [winEmbed], components: mineUI.buildButtonRows(session, true) }).catch(() => { });

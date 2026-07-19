@@ -7,8 +7,7 @@
 </p>
 
 <p align="center">
-  <a href="#PREREQUISITES">PREREQUISITES</a> ·
-  <a href="#SETUP">SETUP</a> ·
+  <a href="#PREREQUISITES">BEGIN SETUP</a> ·
   <a href="docs/CHANGELOG.md">CHANGELOG</a> ·
   <a href="docs/ISSUES.md">KNOWN ISSUES</a> ·
   <a href="docs/INSTRUCTION.md">BOT INSTRUCTION</a>
@@ -22,7 +21,7 @@ Before do anything:
 
 1. **Node.js** (recommend v16 or higher)
 2. **Discord Bot Token**
-3. **Your Discord User ID** (for owner commands, so you can flex on everyone)
+3. **Your Discord User ID** (for owner commands, so you can flex on everyone that you legally using cheat)
 
 > **Note on Databases:**  
 > I used SQLite cuz Im lazy and MongoDB setup sounded like a side quest. You can swap to Mongo if you're built different

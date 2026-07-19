@@ -7,11 +7,41 @@ module.exports = {
     name: 'help',
     description: 'Display help commands and bot information',
     category: 'gnr',
+    usage: 'Zhelp [command]',
     async execute(message, args) {
+        const { commands } = message.client;
+
+        if (args && args.length > 0) {
+            const cmdName = args[0].toLowerCase();
+            const command = commands.get(cmdName);
+            if (!command) {
+                const similar = commands.find(c => c.name.includes(cmdName) || cmdName.includes(c.name));
+                if (similar) {
+                    return message.reply({ content: `Not found command, do you mean \`${similar.name}\`?` });
+                }
+                return message.reply({ content: `Not found command, do you mean \`${similar.name}\`?` });
+            }
+            const cmdEmbed = new EmbedBuilder()
+                .setTitle(`Information command: ${command.name}`)
+                .setColor('Blue')
+                .addFields(
+                    { name: 'Description', value: command.description || 'No description.', inline: false },
+                    { name: 'Usage', value: command.usage ? `\`${command.usage}\`` : `\`Z${command.name}\``, inline: false }
+                );
+            let notes = command.notes || '';
+            if (['sell', 'trade'].includes(command.name)) {
+                if (notes) notes += '\n\n';
+                notes += '⚠️ **Important Notes:** Can only sell `sellable` / `untradeable-sellable` items. Can only trade `sellable` / `unsellable` items.';
+            }
+            if (notes) {
+                cmdEmbed.addFields({ name: 'Important Notes', value: notes, inline: false });
+            }
+            return message.channel.send({ embeds: [cmdEmbed] });
+        }
+
         let currentPage = 0;
         const itemsPerPage = 5;
         let currentCategory = '';
-        const { commands } = message.client;
         const isOwner = message.author.id === process.env.OWNER_ID;
 
         // Filter commands based on category and ownership
@@ -27,7 +57,7 @@ module.exports = {
         const helpEmbed = new EmbedBuilder()
             .setAuthor({ name: 'HELP MENU', iconURL: message.client.user.displayAvatarURL() })
             .addFields({ name: '', value: 'To get more information about a command, use `Zhelp <command>`', inline: false })
-            .setFooter({ text: `v${packageInfo.version} ${packageInfo.releaseType} | ${packageInfo.author}` });
+            .setFooter({ text: `v${packageInfo.version} | ${packageInfo.author}` });
 
         // Menu row — show Owner option only for bot owner
         const menuOptions = isOwner

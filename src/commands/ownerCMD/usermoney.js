@@ -5,6 +5,7 @@ module.exports = {
     name: 'usermoney',
     description: 'Edit a user\'s money (Owner only)',
     category: 'owner',
+    usage: 'Zusermoney <set|remove|reset> @user [amount]',
 
     async execute(message, args) {
         // Check if the user is the bot owner

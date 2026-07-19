@@ -1,3 +1,8 @@
+# v1.1.1-alpha.2.260720
+- Add help command search
+- Minor upgrade crime command
+- Add wanted level (affect to economy command and minigame)
+
 # v1.1.1-alpha.1.260719
 - Move all item (including from shop, fish, mine) to a single folder to easy managing
 - Automatic create bosses_memory if it dont exists
@@ -8,14 +13,6 @@
 - Just create a new tree
 
 # CHANGELOG
-# v1.1.1 7.xx.2026
-- Adding selling system (SELLABLE, UNSELLABLE and UNTRADEABLE for both)
-- WANTED Level while using crime/steal command
-- Add Death/hospitalization when reach 0 health/stamina
-- Upgrade crime.js
-- Add help command search
-- add more item (again)
-- No bug found currently
 
 # v1.1.0 - 7.18.2026
 - Adding more jobs

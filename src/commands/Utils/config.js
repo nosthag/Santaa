@@ -10,15 +10,16 @@ const COOLDOWN_MODE = process.env.COOLDOWN_MODE === 'test' ? 'test' : 'prod';
 
 const configs = {
     prod: {
-        parttime: 4 * 60 * 1000,
-        beg: 100 * 1000,
-        crime: 300 * 1000,
-        steal: 300 * 1000,
+        parttime: 60 * 60 * 1000,
+        beg: 10 * 60 * 1000,
+        crime: 30 * 60 * 1000,
+        steal: 30 * 60 * 1000,
         daily: 24 * 60 * 60 * 1000,
-        fishExhaustion: 60 * 60 * 1000,
-        mineExhaustion: 60 * 60 * 1000,
-        jobWorkCooldown: 5 * 60 * 1000,
-        jobFirePenalty: 2.5 * 60 * 1000,
+        fishExhaustion: 1.5 * 60 * 60 * 1000,
+        mineExhaustion: 2 * 60 * 60 * 1000,
+        jobWorkCooldown: 5 * 60 * 1000, // Currently this command use their own cooldown
+        jobFirePenalty: 2.5 * 60 * 60 * 1000,
+        wantedDecay: 24 * 60 * 60 * 1000,
     },
     test: {
         parttime: 5 * 1000,
@@ -30,6 +31,7 @@ const configs = {
         mineExhaustion: 5 * 1000,
         jobWorkCooldown: 5 * 1000,
         jobFirePenalty: 2 * 1000,
+        wantedDecay: 5 * 60 * 1000, // 5 minutes for testing
     }
 };
 

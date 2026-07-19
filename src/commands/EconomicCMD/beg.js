@@ -2,6 +2,7 @@ const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentTyp
 const { checkCooldown } = require('../Utils/Cooldown');
 const { NPC, BegSuccess, SelfBegSuccess, BegFail, BegStolen } = require('../Utils/misc');
 const { CURRENCY_EMOJI } = require('../Utils/config');
+const { checkWantedRestrictions } = require('../Utils/WantedLevel');
 
 const getRandom = (arr) => arr[Math.floor(Math.random() * arr.length)];
 
@@ -27,6 +28,7 @@ module.exports = {
     name: 'beg',
     description: 'You so broke that you have to beg money from NPC or someone in discord or even yourself 😭😭',
     category: 'eco',
+    usage: 'Zbeg (<@user>)',
     pickBegSuccessMessage,
     pickSelfBegMessage,
     buildTauntPrompt,
@@ -39,6 +41,12 @@ module.exports = {
 
         if (timeLeft) {
             return message.reply({ content: `Please wait ${timeLeft} before using the \`${this.name}\` command again.`, ephemeral: true });
+        }
+
+        const wantedCheck = await checkWantedRestrictions(author.id, this.name, message.client, message);
+        if (!wantedCheck.allowed) {
+            if (!wantedCheck.handled && wantedCheck.message) message.reply(wantedCheck.message);
+            return;
         }
 
         const targetUser = message.mentions.users.first() || (args[0] && /^\d{17,19}$/.test(args[0]) ? await message.client.users.fetch(args[0]).catch(() => null) : null);

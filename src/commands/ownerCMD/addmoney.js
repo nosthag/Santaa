@@ -1,4 +1,4 @@
-const {EmbedBuilder} = require('discord.js');
+const { EmbedBuilder } = require('discord.js');
 const { category } = require('./stat');
 require('dotenv').config();
 
@@ -6,6 +6,7 @@ module.exports = {
     name: 'addmoney',
     description: 'Add money to a user (Owner only)',
     category: 'owner',
+    usage: 'Zaddmoney <@user> <amount>',
     async execute(message, args) {
         // Check if the user is the bot owner        
         if (message.author.id !== process.env.OWNER_ID) {

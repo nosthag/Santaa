@@ -10,6 +10,7 @@ module.exports = {
     name: 'shop',
     description: 'Shopping stuff at Gepora Online Store or Kimori\'s Food Shop',
     category: 'gnr',
+    usage: 'Zshop',
     async execute(message, args) {
         // Main shop selection embed
         const mainEmbed = new EmbedBuilder()

@@ -2,11 +2,13 @@ const { EmbedBuilder } = require('discord.js');
 const { jobs, jobs_txt } = require('../Utils/tips'); // Import job from tips.js
 const { checkCooldown } = require('../Utils/Cooldown'); // Import cooldown function from Cooldown.js
 const { CURRENCY_EMOJI } = require('../Utils/config');
+const { checkWantedRestrictions } = require('../Utils/WantedLevel');
 
 module.exports = {
     name: 'parttime',
     description: 'Do part-time work cuz u unemployed final boss',
     category: 'eco',
+    usage: 'Zparttime',
     async execute(message) {
         const { client, author } = message;
         const dbManager = message.client.db;
@@ -16,6 +18,12 @@ module.exports = {
 
         if (timeLeft) {
             return message.reply(`Please wait ${timeLeft} before using the \`${this.name}\` command again.`);
+        }
+
+        const wantedCheck = await checkWantedRestrictions(author.id, this.name, client, message);
+        if (!wantedCheck.allowed) {
+            if (!wantedCheck.handled && wantedCheck.message) message.reply(wantedCheck.message);
+            return;
         }
 
         // rand fuc

@@ -16,8 +16,9 @@ const rpgmanager = require('../../../database/rpgmanager');
  */
 module.exports = {
   name: 'pvp',
-  description: 'Challenge another user to a PvP duel (Zpvp @user|boss|bot).',
+  description: 'Challenge another user to a PvP duel',
   category: 'mie',
+  usage: 'Zpvp @user|boss|bot',
   async execute(message) {
     const challenger = message.author;
     const args = message.content.slice(1).trim().split(/\s+/);

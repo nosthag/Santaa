@@ -7,6 +7,7 @@ module.exports = {
     name: 'inventory',
     description: 'Checking your inventory and profile stats',
     category: 'eco',
+    usage: 'Zinventory',
     async execute(message, args) {
         let inventoryItems = await rpgmanager.getInventory(message.author.id);
         const allItems = allItemsCache;
@@ -39,7 +40,12 @@ module.exports = {
             let desc = `**Health:** ${userStats.health} / ${userStats.maxHealth}\n`;
             desc += `**Stamina:** ${userStats.stamina} / ${userStats.maxStamina}\n`;
             desc += `**Attack:** ${userStats.totalAttack}\n`;
-            desc += `**Equipped:** ${userStats.equippedItemName || 'None'}\n\n`;
+            desc += `**Equipped:** ${userStats.equippedItemName || 'None'}\n`;
+            
+            const stats = await rpgmanager.getStats(message.author.id);
+            const wantedLevel = Math.floor((stats.wanted_level || 0) / 5);
+            const stars = wantedLevel > 0 ? '⭐'.repeat(wantedLevel) : '0';
+            desc += `**Wanted Level:** ${stars}\n\n`;
 
             const start = page * itemsPerPage;
             const currentItems = groupedItems.slice(start, start + itemsPerPage);
