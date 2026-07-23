@@ -31,7 +31,7 @@ module.exports = {
             let notes = command.notes || '';
             if (['sell', 'trade'].includes(command.name)) {
                 if (notes) notes += '\n\n';
-                notes += '⚠️ **Important Notes:** Can only sell `sellable` / `untradeable-sellable` items. Can only trade `sellable` / `unsellable` items.';
+                notes += '⚠️ **Important Notes:** Can only sell items that are sellable, and trade items that are tradeable.';
             }
             if (notes) {
                 cmdEmbed.addFields({ name: 'Important Notes', value: notes, inline: false });

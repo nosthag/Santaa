@@ -3,7 +3,7 @@ module.exports = {
     name: 'Diamond',
     sell: 500,
     desc: 'Hardest and expensive, but not equal as wood',
-    type: ['sellable'],
+    type: [],
     is_sellable: true,
     is_tradeable: true
 };

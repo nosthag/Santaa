@@ -3,7 +3,7 @@ module.exports = {
     name: 'Normal Gold Fish',
     sell: 25,
     desc: 'A fish with gold... but they are fake',
-    type: ['sellable'],
+    type: [],
     is_sellable: true,
     is_tradeable: true
 };

@@ -3,7 +3,7 @@ module.exports = {
     name: 'Eternal Diamond',
     sell: 6000,
     desc: 'A diamond that never fades.',
-    type: ['sellable'],
+    type: [],
     is_sellable: true,
     is_tradeable: true
 };

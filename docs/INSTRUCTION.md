@@ -74,7 +74,7 @@ module.exports = {
   name: 'hello',
   description: 'Bot greeting command',
   category: 'gnr', // eco: Economic, gnr: General, owner: Owner, utl: Utils, mie: Minigames
-  usage: '(YOUR_PREFIX)hello [USER] (OPTIONAL)', // really need
+  usage: '!hello', // really need, if you lazy to add then you could create a file to automatic add to all command
   notes: 'You can tag a user to greet them, or leave it blank to greet yourself.', // not necessary to add
   execute(message, args) {
     message.reply('Hello!');
@@ -86,11 +86,11 @@ module.exports = {
 
 ## 4. Item System (`src/items`)
 
-This folder contains only data, not command execution logic.
+This folder contains only data, not command execution logic
 
 ### Folder Structure:
-- `[mine/fish]/[Rarity]/item.js`: Divided by rarity (Common $\rightarrow$ Mythic) for the two minigames.
-- `shopItems/[ShopName]/item.js`: Divided by shop name.
+- `[mine/fish]/[Rarity]/item.js`: Divided by rarity (Common $\rightarrow$ Mythic) for the two minigames
+- `shopItems/[ShopName]/item.js`: Divided by shop name
 
 ### Item File Format:
 ```js
@@ -99,19 +99,21 @@ module.exports = {
     name: 'Stone',
     sell: 10,
     desc: 'You could find this somewhere at your garden',
-    type: ['consumable', 'sellable']
+    type: ['consumable'],
+    is_sellable: true,
+    is_tradeable: true,
 };
 
-// By default, if the item belongs to only one type or than other types (such as equippable, consumable...) that are not related to:
-// SELLABLE, UNSELLABLE, UNTRADEABLE-SELLABLE, UNTRADEABLE-UNSELLABLE, it will be default cannot be sold (but can still be traded).
+// By default, you can define is_sellable: true and is_tradeable: true to indicate if the item can be sold or traded.
+// If not specified, they might have default fallback behaviors depending on the command.
 ```
 ## 5. Minigames System (`src/minigames`)
 
 Complex minigames are usually divided into 3 parts:
-- **Core (`...Core.js`):** Handles main logic and calculations.
-- **UI (`...UI.js` or `...Board.js`):** Handles display and message formatting for the user.
-- **List (`...list.js`):** List of items/rewards that can be obtained.
-- **Main (`...js`):** Main command file connecting Core and UI.
+- **Core (`...Core.js`):** Handles main logic and calculations
+- **UI (`...UI.js` or `...Board.js`):** Handles display and message formatting for the user
+- **Main (`...js`):** Main command file connecting Core and UI
+(for ...list.js like fishlist or minelist, its just a list of items)
 
 Simple or other minigames type: only 1 single file .js
 
@@ -121,28 +123,27 @@ The project uses SQLite, managed via two main modules in `database/`:
 
 ### `dbmanager.js` (Database: `balance.db`)
 Manages finances and careers:
-- **`balances` table:** `balance` (cash), `bank` (bank), `total_earned` (total earned).
-- **`job_states` table:** Job status, number of times worked, time until fired.
+- **`balances` table:** `balance` (cash), `bank` (bank), `total_earned` (total earned)
+- **`job_states` table:** Job status, number of times worked, time until fired
 
 ### `rpgmanager.js` (Database: `rpg.db`)
 Manages role-playing elements:
-- **`inventory` table:** Stores items owned by the user.
-- **`stats` table:** `health`, `stamina`, `attack`, `defense`, `level`, `exp`, `steals`, `equipped_items`.
-- **`pvp_history` table:** PVP combat history, wins/losses.
+- **`inventory` table:** Stores items owned by the use
+- **`stats` table:** `health`, `stamina`, `attack`, `defense`, `level`, `exp`, `steals`, `equipped_items`
+- **`pvp_history` table:** PVP combat history, wins/losses
 
 ## 7. Boss & Memory System
 
-- `database/bosses/*.json`: Contains boss stats and skill configurations.
-- `database/bosses_memory/*.json`: Stores current boss state (e.g., remaining health) so it isn't reset when the bot restarts.
+- `database/bosses/*.json`: Contains boss stats and skill configurations
+- `database/bosses_memory/*.json`: Stores current boss state (e.g., remaining health) so it isn't reset when the bot restarts
 ---
 
 ## 8. TO DO
 ### ⚠️ Things not to do
-- Do not delete/rename main folders: `commands`, `minigames`, `memes`, `items`, `database`.
-- Do not modify the file scanning logic in `src/index.js` unless you fully understand it.
-- Do not delete files without checking if they are imported anywhere.
+- Do not delete/rename main folders: `commands`, `minigames`, `memes`, `items`, `database`
+- Do not modify the file scanning logic in `src/index.js` unless you fully understand it
+- Do not delete files without checking if they are imported anywhere
 
 ### ✅ THINGS TO DO
-- [ ] Remove all custom emojis (in `commands/utils/NavigateManager.js` and related button functions).
-- [ ] Update emoji currency via `config.js` in the same folder.
-- [ ] Implement reward logic in `src/minigames/Other/olympac.js`.
+- [ ] Remove all custom emojis (in `commands/utils/NavigateManager.js` and related button functions)
+- [ ] Update emoji currency via `config.js` in the same folder

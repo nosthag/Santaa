@@ -3,7 +3,7 @@ module.exports = {
     name: 'Sucker Fish',
     sell: 23,
     desc: 'Are you really... catching fish in your home aquarium?',
-    type: ['sellable'],
+    type: [],
     is_sellable: true,
     is_tradeable: true
 };

@@ -3,7 +3,7 @@ module.exports = {
     name: 'Ethereal Trout',
     sell: 800,
     desc: 'A shimmering trout from the deep rift',
-    type: ['sellable'],
+    type: [],
     is_sellable: true,
     is_tradeable: true
 };

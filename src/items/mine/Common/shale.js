@@ -3,7 +3,7 @@ module.exports = {
     name: 'Shale',
     sell: 11,
     desc: 'A sedimentary rock',
-    type: ['sellable'],
+    type: [],
     is_sellable: true,
     is_tradeable: true
 };

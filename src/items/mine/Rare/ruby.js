@@ -3,7 +3,7 @@ module.exports = {
     name: 'Ruby',
     sell: 170,
     desc: 'Deep red ruby crystal.',
-    type: ['sellable'],
+    type: [],
     is_sellable: true,
     is_tradeable: true
 };

@@ -3,7 +3,7 @@ module.exports = {
     name: 'Void Crystal',
     sell: 5000,
     desc: 'A crystal that consumes light.',
-    type: ['sellable'],
+    type: [],
     is_sellable: true,
     is_tradeable: true
 };

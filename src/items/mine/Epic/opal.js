@@ -3,7 +3,7 @@ module.exports = {
     name: 'Opal',
     sell: 420,
     desc: 'Yall im found gems',
-    type: ['sellable'],
+    type: [],
     is_sellable: true,
     is_tradeable: true
 };

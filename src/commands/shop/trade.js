@@ -127,22 +127,20 @@ module.exports = {
     description: 'Trade items and money with another user',
     category: 'eco',
     usage: 'Ztrade <@user>',
-    notes: 'Can only trade sellable / untradeable-sellable / unsellable items.',
+    notes: 'Can only trade items that are tradeable.',
 
     async execute(message, args) {
         const allItems = loadItems();
         const userA = message.author;
 
-        // ── Validate target ──────────────────────────────────────────────
         const userB = message.mentions.users.first();
         if (!userB)
-            return message.reply('❌ Usage: `Ztrade @user`');
+            return message.reply('Usage: `Ztrade @user`');
         if (userB.id === userA.id)
-            return message.reply('❌ You cannot trade with yourself!');
+            return message.reply('You cannot trade with yourself!');
         if (userB.bot)
-            return message.reply('❌ You cannot trade with a bot!');
+            return message.reply('You cannot trade with a bot!');
 
-        // ── Phase 1: Trade Request ───────────────────────────────────────
         const requestEmbed = new EmbedBuilder()
             .setTitle('📨 Trade Request')
             .setColor(0xFEE75C)
@@ -195,7 +193,6 @@ module.exports = {
                 return requestMsg.edit({ content: '', embeds: [declineEmbed], components: [] }).catch(() => { });
             }
 
-            // ── Phase 2: Trade Panel ─────────────────────────────────────
             // Trade state
             let invA = await rpgmanager.getInventory(userA.id);
             let invB = await rpgmanager.getInventory(userB.id);
@@ -234,13 +231,6 @@ module.exports = {
                 const rowsA = buildSelectRows(availA, pageA, 'A', userA.username);
                 const rowsB = buildSelectRows(availB, pageB, 'B', userB.username);
                 const confirmRow = buildConfirmRow();
-
-                // Layout (max 5 Discord rows):
-                // Row 1: A's select menu
-                // Row 2: B's select menu
-                // Row 3: Shared action buttons (both users use these)
-                // Row 4: Pagination A+B merged (only if needed)
-                // Row 5: Ready / Cancel
                 const components = [];
 
                 // A select menu
@@ -319,7 +309,6 @@ module.exports = {
 
                     const side = isA ? 'A' : 'B';
 
-                    // ── Select Menu: cache the chosen inventory id ──────────
                     if (i.isStringSelectMenu()) {
                         // Route by WHO clicked, not which dropdown — ensures A's selection always goes to selectedA
                         if (isA) selectedA = i.values[0];
@@ -329,7 +318,6 @@ module.exports = {
 
                     if (!i.isButton()) return;
 
-                    // ── Add Item ────────────────────────────────────────────
                     if (i.customId === 'trade_add') {
                         const pending = side === 'A' ? selectedA : selectedB;
                         if (!pending)
@@ -345,7 +333,7 @@ module.exports = {
 
                         // Check if item is tradeable
                         const itemDataCheck = allItems.get(item.item_id);
-                        if (itemDataCheck && itemDataCheck.is_tradeable === false) {
+                        if (itemDataCheck && !itemDataCheck.is_tradeable) {
                             return i.reply({ content: '🔒 Vật phẩm này bị khóa (untradeable), không thể giao dịch!', ephemeral: true });
                         }
 
@@ -356,7 +344,6 @@ module.exports = {
                         return i.update({ embeds: [buildTradeEmbed(userA, userB, offerA, offerB, moneyA, moneyB, bankA, bankB, readyA, readyB)], components: buildComponents() });
                     }
 
-                    // ── Remove Last Item ────────────────────────────────────
                     if (i.customId === 'trade_remove') {
                         const offer = side === 'A' ? offerA : offerB;
                         if (offer.length === 0)
@@ -369,7 +356,6 @@ module.exports = {
                         return i.update({ embeds: [buildTradeEmbed(userA, userB, offerA, offerB, moneyA, moneyB, bankA, bankB, readyA, readyB)], components: buildComponents() });
                     }
 
-                    // ── Set Money (Balance) ─────────────────────────────────
                     if (i.customId === 'trade_money') {
                         await i.reply({ content: '💬 Type the **Balance** amount you want to add (type `0` to remove):', ephemeral: true });
                         const filter = m => m.author.id === i.user.id;
@@ -392,7 +378,6 @@ module.exports = {
                         return requestMsg.edit({ embeds: [buildTradeEmbed(userA, userB, offerA, offerB, moneyA, moneyB, bankA, bankB, readyA, readyB)], components: buildComponents() });
                     }
 
-                    // ── Set Bank Balance ────────────────────────────────────
                     if (i.customId === 'trade_bank') {
                         await i.reply({ content: '💬 Type the **Bank Balance** amount you want to add (type `0` to remove):', ephemeral: true });
                         const filter = m => m.author.id === i.user.id;
@@ -414,7 +399,6 @@ module.exports = {
                         return requestMsg.edit({ embeds: [buildTradeEmbed(userA, userB, offerA, offerB, moneyA, moneyB, bankA, bankB, readyA, readyB)], components: buildComponents() });
                     }
 
-                    // ── Pagination ──────────────────────────────────────────
                     if (i.customId === `trade_prev_${side}`) {
                         if (side === 'A' && pageA > 0) pageA--;
                         if (side === 'B' && pageB > 0) pageB--;
@@ -432,7 +416,6 @@ module.exports = {
                         return i.update({ embeds: [buildTradeEmbed(userA, userB, offerA, offerB, moneyA, moneyB, bankA, bankB, readyA, readyB)], components: buildComponents() });
                     }
 
-                    // ── Ready ───────────────────────────────────────────────
                     if (i.customId === 'trade_ready') {
                         if (side === 'A') readyA = true;
                         else readyB = true;
@@ -445,7 +428,6 @@ module.exports = {
                         return i.update({ embeds: [buildTradeEmbed(userA, userB, offerA, offerB, moneyA, moneyB, bankA, bankB, readyA, readyB)], components: buildComponents() });
                     }
 
-                    // ── Cancel ──────────────────────────────────────────────
                     if (i.customId === 'trade_cancel') {
                         tradeCollector.stop('cancelled');
                         await i.update({
@@ -476,7 +458,6 @@ module.exports = {
 
                 if (reason !== 'confirmed') return;
 
-                // ── Phase 3: Execute Trade ───────────────────────────────
                 try {
                     // Re-validate balances before executing
                     const dbA = await dbmanager.getUser(userA.id);

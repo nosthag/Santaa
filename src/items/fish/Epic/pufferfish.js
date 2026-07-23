@@ -3,7 +3,7 @@ module.exports = {
     name: 'Puffer Fish',
     sell: 78,
     desc: 'Let he eat carrot and he gonna said "Augh~"',
-    type: ['sellable'],
+    type: [],
     is_sellable: true,
     is_tradeable: true
 };

@@ -4,7 +4,7 @@ module.exports = {
     cost: 150,
     sell: 112,
     desc: 'A basic iron sword. (Attack: +10)',
-    type: ['equippable', 'sellable'],
+    type: ['equippable'],
     stats: { attack: 15 },
     is_sellable: true,
     is_tradeable: true

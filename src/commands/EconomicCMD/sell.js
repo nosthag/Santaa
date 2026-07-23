@@ -4,8 +4,6 @@ const dbmanager = require('../../../database/dbmanager');
 const { allItemsCache } = require('../Utils/StatsCalculator');
 
 /**
- *
- *
  * @param {string}   userId    Discord user ID
  * @param {object}   itemData  Item definition from allItemsCache
  * @param {number}   quantity  Number of items to sell
@@ -14,7 +12,7 @@ const { allItemsCache } = require('../Utils/StatsCalculator');
  */
 async function executeSell(userId, itemData, quantity, replyFn) {
     // Guard: is_sellable
-    if (itemData.is_sellable === false) {
+    if (!itemData.is_sellable) {
         await replyFn(`**${itemData.name}** is unsellable!`);
         return false;
     }

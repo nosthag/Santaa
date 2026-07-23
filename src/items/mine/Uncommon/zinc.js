@@ -3,7 +3,7 @@ module.exports = {
     name: 'Zinc',
     sell: 35,
     desc: 'Bluish-white zinc ore.',
-    type: ['sellable'],
+    type: [],
     is_sellable: true,
     is_tradeable: true
 };

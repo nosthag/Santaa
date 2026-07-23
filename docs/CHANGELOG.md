@@ -13,7 +13,7 @@ v1.1.1-alpha.3
 - Updating some stuff on changelog
 - Remove version and type in .env
 
-Alpha release: [7519dde](https://github.com/sn00bol/Santaa/commit/7519dde3e5dd81a9f77eb0677d73a6fa38dbe45f), [540afa3](https://github.com/sn00bol/Santaa/commit/540afa3058123ce03396dba54d7994a7f6a77264), [68aea7d](https://github.com/sn00bol/Santaa/commit/68aea7df00845685bddff83bc8560c9efe3e912b)
+Alpha release: [7519dde](https://github.com/sn00bol/Santaa/commit/7519dde3e5dd81a9f77eb0677d73a6fa38dbe45f), [540afa3](https://github.com/sn00bol/Santaa/commit/540afa3058123ce03396dba54d7994a7f6a77264), [68aea7d](https://github.com/sn00bol/Santaa/commit/68aea7df00845685bddff83bc8560c9efe3e912b), [dacfc47](https://github.com/sn00bol/Santaa/commit/dacfc47b4203b17c1b1ded4301bb9a836fb0d0d0)
 
 Beta release:
 

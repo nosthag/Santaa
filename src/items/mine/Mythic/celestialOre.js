@@ -3,7 +3,7 @@ module.exports = {
     name: 'Celestial Ore',
     sell: 5500,
     desc: 'Ore from the highest heavens.',
-    type: ['sellable'],
+    type: [],
     is_sellable: true,
     is_tradeable: true
 };
